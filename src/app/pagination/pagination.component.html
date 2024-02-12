@@ -1,0 +1,65 @@
+<div
+  class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6"
+>
+  <div class="flex flex-1 justify-between sm:hidden">
+    <a
+      (click)="handleInput('prev')"
+      href="#"
+      [ngClass]="
+        page === 0 ? 'pointer-events-none text-gray-400' : 'text-sky-400'
+      "
+      class="relative inline-flex items-center rounded-md border bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+      >Previous</a
+    >
+    <a
+      (click)="handleInput('next')"
+      href="#"
+      [ngClass]="
+        page === totalPages
+          ? 'pointer-events-none text-gray-400'
+          : 'text-sky-400'
+      "
+      class="relative ml-3 inline-flex items-center rounded-md border bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+      >Next</a
+    >
+  </div>
+  <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+    <div>
+      <p class="text-sm text-gray-700">
+        Page
+        <span class="font-medium"> {{ page + 1 }}</span>
+        of
+        <span class="font-medium">{{ totalPages }}</span>
+      </p>
+    </div>
+    <div>
+      <nav
+        class="isolate inline-flex -space-x-px rounded-md shadow-sm"
+        aria-label="Pagination"
+      >
+        <a
+          (click)="handleInput('prev')"
+          href="#"
+          [ngClass]="
+            page === 0 ? 'pointer-events-none text-gray-400' : 'text-sky-400'
+          "
+          class="relative inline-flex items-center rounded-l-md px-2 py-2 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+        >
+          <p>Previous</p>
+        </a>
+        <a
+          (click)="handleInput('next')"
+          href="#"
+          [ngClass]="
+            page === totalPages
+              ? 'pointer-events-none text-gray-400'
+              : 'text-sky-400'
+          "
+          class="relative inline-flex items-center rounded-r-md px-2 py-2 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+        >
+          <p>Next</p>
+        </a>
+      </nav>
+    </div>
+  </div>
+</div>

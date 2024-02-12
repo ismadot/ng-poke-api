@@ -1,4 +1,41 @@
-<p>pocket-monster-list works!</p>
-<ul>
-  <li *ngFor="let monster of pocketMonsterList">{{ monster.name }}</li>
+<ul role="list" class="divide-y divide-gray-100 border rounded-lg mt-4">
+  <li
+    *ngFor="let monster of pocketMonsterListPagination[pageCurrent]"
+    class="flex justify-between gap-x-6 py-5 px-4 hover:bg-slate-200 cursor-pointer"
+    (click)="!pocketMonsterRequest.loading && handleItemClick(monster.id)"
+  >
+    <div class="flex min-w-0 gap-x-4">
+      <img
+        class="h-12 w-12 flex-none rounded-full bg-gray-50"
+        [src]="monster.data ? monster?.data?.sprites?.front_default : baseSrc"
+        [ngClass]="monster.data ? 'h-32 w-32' : 'h-12 w-12'"
+        [alt]="monster.name"
+      />
+
+      <div class="min-w-0 flex-auto">
+        <p class="text-sm font-semibold leading-6 text-gray-900">
+          {{ monster.name | titlecase }}
+        </p>
+        <p class="mt-1 text-xs leading-5 text-gray-500">Who's That Pokémon?</p>
+        <ng-template [ngIf]="monster.data">
+          <span
+            *ngFor="let type of monster?.data?.types"
+            class="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
+            >{{ type.type.name | titlecase }}</span
+          >
+        </ng-template>
+      </div>
+    </div>
+    <div class="shrink-0 sm:flex sm:flex-col sm:items-end">
+      <p class="text-sm leading-6 text-gray-900"># {{ monster.id }}</p>
+      <p class="mt-1 text-xs leading-5 text-gray-500" *ngIf="monster.data">
+        {{ monster?.data?.weight }}hg
+      </p>
+    </div>
+  </li>
+  <app-pagination
+    (pageEvent)="handlePageEvent($event)"
+    [page]="pageCurrent"
+    [totalPages]="pocketMonsterListPagination.length"
+  ></app-pagination>
 </ul>
