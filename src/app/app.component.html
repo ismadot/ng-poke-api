@@ -8,8 +8,13 @@
   </header>
   <main>
     <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-      <app-poke-search (searchEvent)="handleSearch($event)"></app-poke-search>
-      <app-pocket-monster-list></app-pocket-monster-list>
+      <app-poke-search
+        (searchEvent)="handleSearch($event)"
+        [nameSuggList]="nameSuggList"
+      ></app-poke-search>
+      <app-pocket-monster-list
+        (nameListEvent)="setNameSuggList($event)"
+      ></app-pocket-monster-list>
     </div>
   </main>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PocketMonsterService } from '../pocket-monster.service';
 import { CommonModule } from '@angular/common';
 import {
@@ -9,7 +9,12 @@ import {
   PokemonByIdType,
   PokemonSpeciesByIdType,
 } from '../common/types';
-import { chunk, cleanUrlId, requestInit } from '../common/helper';
+import {
+  chunk,
+  cleanUrlId,
+  countStringsByInitialLetter,
+  requestInit,
+} from '../common/helper';
 import { PaginationComponent } from '../pagination/pagination.component';
 
 @Component({
@@ -20,6 +25,7 @@ import { PaginationComponent } from '../pagination/pagination.component';
   styleUrl: './pocket-monster-list.component.scss',
 })
 export class PocketMonsterListComponent implements OnInit {
+  @Output() nameListEvent = new EventEmitter<PokemonItemType[]>();
   pocketMonsterList: PokemonItemType[] = [];
   pocketMonsterListPagination: PokemonItemType[][] = [];
   pocketMonsterAllItems: number = 0;
@@ -63,7 +69,11 @@ export class PocketMonsterListComponent implements OnInit {
       ...element,
       name: element.name.replace(/[^a-zA-Z ]/, ' '),
     }));
+    const listChar = countStringsByInitialLetter(
+      listCleanNames.map((item) => item.name)
+    );
     this.pocketMonsterList = listCleanNames;
+    this.nameListEvent.emit(listCleanNames);
     this.pocketMonsterListPagination = chunk(listCleanNames, this.pageLimit);
   }
 
@@ -108,10 +118,6 @@ export class PocketMonsterListComponent implements OnInit {
   }
 
   pocketMonsterInToList(pokeId: number, data: PokemonByIdType) {
-    console.log(
-      '🚀 ~ PocketMonsterListComponent ~ pocketMonsterInToList ~ data:',
-      data
-    );
     const itemToPass = this.pocketMonsterList.map((item) => {
       return item.id !== pokeId ? item : { ...item, data };
     });
