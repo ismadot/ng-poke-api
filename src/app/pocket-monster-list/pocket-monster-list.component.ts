@@ -9,7 +9,7 @@ import {
   PokemonByIdType,
   PokemonSpeciesByIdType,
 } from '../common/types';
-import { chunk, requestInit } from '../common/helper';
+import { chunk, cleanUrlId, requestInit } from '../common/helper';
 import { PaginationComponent } from '../pagination/pagination.component';
 
 @Component({
@@ -52,7 +52,7 @@ export class PocketMonsterListComponent implements OnInit {
       const find = element.url.match(this.regex);
       return {
         ...element,
-        id: find ? parseInt(find[1], 10) : -1,
+        id: cleanUrlId(element.url, this.regex),
       };
     });
   }
@@ -77,6 +77,7 @@ export class PocketMonsterListComponent implements OnInit {
       next: (data) => {
         this.pocketMonsterRequest = { ...requestInit, data };
         this.pocketMonsterInToList(id, data);
+        this.handlePokemonById(cleanUrlId(data.species.url, this.regex), id);
       },
       error: (error) => {
         this.pocketMonsterRequest = { ...requestInit, error };
@@ -84,11 +85,21 @@ export class PocketMonsterListComponent implements OnInit {
     });
   }
 
-  handlePokemonById(id: number, data: PokemonByIdType) {
+  handlePokemonById(id: number, idRef: number) {
     this.pocketMonsterspeciesRequest = { ...requestInit, loading: true };
     this.pocketMonsterService.getPokemonSpeciesById(id).subscribe({
       next: (data) => {
         this.pocketMonsterspeciesRequest = { ...requestInit, data };
+        const filterFlavorText = data.flavor_text_entries.filter(
+          (items) => items.language.name === 'en'
+        );
+        this.pocketMonsterRequest.data !== null && console.log('hey');
+
+        this.pocketMonsterRequest.data !== null &&
+          this.pocketMonsterInToList(idRef, {
+            ...this.pocketMonsterRequest.data,
+            dataSpecies: { ...data, flavor_text_entries: filterFlavorText },
+          });
       },
       error: (error) => {
         this.pocketMonsterspeciesRequest = { ...requestInit, error };
@@ -97,6 +108,10 @@ export class PocketMonsterListComponent implements OnInit {
   }
 
   pocketMonsterInToList(pokeId: number, data: PokemonByIdType) {
+    console.log(
+      '🚀 ~ PocketMonsterListComponent ~ pocketMonsterInToList ~ data:',
+      data
+    );
     const itemToPass = this.pocketMonsterList.map((item) => {
       return item.id !== pokeId ? item : { ...item, data };
     });

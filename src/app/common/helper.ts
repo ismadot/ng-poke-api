@@ -17,6 +17,10 @@ export const chunk = <T>(arr: T[], size: number): T[][] =>
     arr.slice(i * size, i * size + size)
   );
 
+export const cleanUrlId = (str: string, regex: RegExp) => {
+  const find = str.match(regex);
+  return find ? parseInt(find[1], 10) : -1;
+};
 export const requestInit = {
   data: null,
   error: null,

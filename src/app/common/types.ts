@@ -37,9 +37,12 @@ export type PokemonByIdType = {
     slot: number;
   }[];
   weight: number;
+  species: PokemonResponseBaseType;
+  dataSpecies?: PokemonSpeciesByIdType;
 };
 
 export type PokemonSpeciesByIdType = {
+  base_happiness: number;
   color: {
     name: string;
     url: string;
